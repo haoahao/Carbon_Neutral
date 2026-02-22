@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parent
 INPUT_FILE = ROOT / "review_responses.tsv"
 OUTPUT_DIR = ROOT / "docs"
 OUTPUT_FILE = OUTPUT_DIR / "index.html"
+ROOT_INDEX = ROOT / "index.html"
 
 
 def parse_rows(path: Path) -> list[tuple[str, str]]:
@@ -52,6 +53,12 @@ def build_html(rows: list[tuple[str, str]]) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="index,follow,max-image-preview:none">
+  <meta name="description" content="114年度碳中和中程計畫審查意見修正對照表，提供教育局報送使用。">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://haoahao.github.io/Carbon_Neutral/">
   <title>114年度碳中和中程計畫 審查意見修正對照表</title>
   <style>
     :root {{
@@ -176,7 +183,9 @@ def main() -> None:
     if not rows:
         raise SystemExit("No rows found in review_responses.tsv")
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    OUTPUT_FILE.write_text(build_html(rows), encoding="utf-8")
+    html_content = build_html(rows)
+    OUTPUT_FILE.write_text(html_content, encoding="utf-8")
+    ROOT_INDEX.write_text(html_content, encoding="utf-8")
     print(f"Generated: {OUTPUT_FILE}")
 
 
