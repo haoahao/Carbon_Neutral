@@ -13,8 +13,20 @@ OUTPUT_FILE = OUTPUT_DIR / "index.html"
 ROOT_INDEX = ROOT / "index.html"
 
 
-def parse_rows(path: Path) -> list[tuple[str, str]]:
-    rows: list[tuple[str, str]] = []
+def split_response_and_page(text: str) -> tuple[str, str]:
+    marker = "頁碼："
+    if marker not in text:
+        return text.strip(), "第＿＿＿頁至第＿＿＿頁"
+    left, right = text.rsplit(marker, 1)
+    response = left.strip().rstrip("。")
+    page = right.strip().rstrip("。")
+    if not page:
+        page = "第＿＿＿頁至第＿＿＿頁"
+    return response, page
+
+
+def parse_rows(path: Path) -> list[tuple[str, str, str]]:
+    rows: list[tuple[str, str, str]] = []
     with path.open("r", encoding="utf-8", newline="") as f:
         reader = csv.reader(f, delimiter="\t")
         header_seen = False
@@ -27,9 +39,10 @@ def parse_rows(path: Path) -> list[tuple[str, str]]:
             if len(row) < 2:
                 continue
             opinion = row[0].strip()
-            response = row[1].strip()
-            if opinion and response:
-                rows.append((opinion, response))
+            response_full = row[1].strip()
+            if opinion and response_full:
+                response, page = split_response_and_page(response_full)
+                rows.append((opinion, response, page))
     return rows
 
 
@@ -38,13 +51,14 @@ def linebreak_to_html(text: str) -> str:
     return escaped.replace("\n", "<br>")
 
 
-def build_html(rows: list[tuple[str, str]]) -> str:
+def build_html(rows: list[tuple[str, str, str]]) -> str:
     table_rows = []
-    for opinion, response in rows:
+    for opinion, response, page in rows:
         table_rows.append(
             "      <tr>\n"
             f"        <td>{linebreak_to_html(opinion)}</td>\n"
             f"        <td>{linebreak_to_html(response)}</td>\n"
+            f"        <td>{linebreak_to_html(page)}</td>\n"
             "      </tr>"
         )
 
@@ -116,7 +130,7 @@ def build_html(rows: list[tuple[str, str]]) -> str:
     table {{
       width: 100%;
       border-collapse: collapse;
-      min-width: 860px;
+      min-width: 980px;
     }}
     th, td {{
       vertical-align: top;
@@ -134,9 +148,16 @@ def build_html(rows: list[tuple[str, str]]) -> str:
       z-index: 1;
     }}
     td:first-child {{
-      width: 33%;
+      width: 26%;
       background: #f8fcf7;
       font-weight: 700;
+    }}
+    td:nth-child(2) {{
+      width: 56%;
+    }}
+    td:nth-child(3) {{
+      width: 18%;
+      white-space: nowrap;
     }}
     .footer {{
       margin-top: 14px;
@@ -154,7 +175,7 @@ def build_html(rows: list[tuple[str, str]]) -> str:
   <main class="wrap">
     <section class="hero">
       <h1>114年度「碳中和中程計畫」審查意見修正對照表</h1>
-      <p>雙欄格式：審查意見 / 修正情形與頁碼（可直接列印或作為附件）</p>
+      <p>三欄格式：審查意見 / 修正情形 / 頁碼（可直接列印或作為附件）</p>
     </section>
     <section class="card">
       <div class="scroll">
@@ -162,7 +183,8 @@ def build_html(rows: list[tuple[str, str]]) -> str:
           <thead>
             <tr>
               <th>審查意見</th>
-              <th>修正情形與頁碼</th>
+              <th>修正情形</th>
+              <th>頁碼</th>
             </tr>
           </thead>
           <tbody>
