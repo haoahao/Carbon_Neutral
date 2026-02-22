@@ -105,19 +105,31 @@
     .cell-list li:last-child {
       margin-bottom: 0;
     }
-    .point-lines {
+    .footer {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: .86rem;
+    }
+    .diff {
       margin: 0;
+    }
+    .diff + .diff {
+      margin-top: 8px;
+    }
+    .point-lines {
+      margin-top: .3rem;
     }
     .point-item {
       margin: 0;
     }
     .point-item + .point-item {
-      margin-top: .5rem;
+      margin-top: .4rem;
     }
-    .footer {
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: .86rem;
+    .diff-red {
+      color: #b42318;
+    }
+    .diff-blue {
+      color: #1849a9;
     }
     @media (max-width: 768px) {
       .wrap { margin: 18px auto; }
@@ -130,7 +142,7 @@
   <main class="wrap">
     <section class="hero">
       <h1>114年度「碳中和中程計畫」審查意見修正對照表</h1>
-      <p>三欄格式：審查意見 / 修正情形 / 頁碼（可直接列印或作為附件）</p>
+      <p>三欄格式：審查意見 / 修正情形（紅藍對比）/ 頁碼（可直接列印或作為附件）</p>
     </section>
     <section class="card">
       <div class="scroll">
@@ -138,55 +150,82 @@
           <thead>
             <tr>
               <th>審查意見</th>
-              <th>修正情形</th>
+              <th>修正情形（紅藍對比）</th>
               <th>頁碼</th>
             </tr>
           </thead>
           <tbody>
       <tr>
         <td><ul class="cell-list"><li>一、碳盤查資料缺乏基準年與排放比例分析</li></ul></td>
-        <td><div class="point-lines"><div class="point-item">1. 已明確設定114年為基準年（Baseline Year），115至118年均以同一口徑比較。</div><div class="point-item">2. 已新增排放結構比例分析與熱點排序，將占比超過10%項目列為優先減量對象。</div><div class="point-item">3. 已補充淨排放管理邏輯（總排放量扣除碳吸存量）並註明用途僅供校內管理，不作抵銷宣告。</div><div class="point-item">4. 已建立資料來源欄位（電費單、清運單、盤查表）以利教育局查核</div></div></td>
-        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁</li></ul></td>
+        <td>
+          <p class="diff diff-red"><strong>【建議修改】</strong>一、碳盤查資料缺乏基準年與排放比例分析</p>
+          <div class="diff diff-blue"><strong>【修正內容】</strong><div class="point-lines"><div class="point-item">1. 已明確設定114年為基準年（Baseline Year），115至118年減量目標均以114年盤查結果為比較基礎。</div><div class="point-item">2. 已新增「排放結構比例分析」段落，補充各排放源占比與管理重點（外購電力為主要來源、交通次之、逸散及其他較低）。</div><div class="point-item">3. 已補充淨排放量計算邏輯（總排放量扣除樹木碳匯）作為校內管理參考</div></div></div>
+        </td>
+        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁。</li></ul></td>
       </tr>
       <tr>
         <td><ul class="cell-list"><li>二、減碳目標偏低，缺乏分年路徑</li></ul></td>
-        <td><div class="point-lines"><div class="point-item">1. 已調整分年目標（相較114年）：115年-2%、116年-4%、117年-6%、118年-8%。</div><div class="point-item">2. 已建立措施對應表，將EMS優化、設備汰換、行為節能與綠電管理對應至各年度貢獻量。</div><div class="point-item">3. 已新增年度里程碑與主責單位，採每年7月及12月檢核，未達標即提出改善方案。</div><div class="point-item">4. 已補充目標值、實際值、差異原因與修正作法之追蹤欄位</div></div></td>
-        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁</li></ul></td>
+        <td>
+          <p class="diff diff-red"><strong>【建議修改】</strong>二、減碳目標偏低，缺乏分年路徑</p>
+          <div class="diff diff-blue"><strong>【修正內容】</strong><div class="point-lines"><div class="point-item">1. 已調整分年減量目標（相較114年）：115年-2%、116年-4%、117年-6%、118年-8%。</div><div class="point-item">2. 已補充減量來源分配（EMS管理、設備汰換、行為節能、綠電管理）。</div><div class="point-item">3. 已新增「淨零推動路徑圖」及年度執行重點</div></div></div>
+        </td>
+        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁。</li></ul></td>
       </tr>
       <tr>
         <td><ul class="cell-list"><li>三、太陽能權屬與再生能源憑證未釐清</li></ul></td>
-        <td><div class="point-lines"><div class="point-item">1. 已新增綠電管理專章，明確標示契約型態、資產權責與校方可主張範圍。</div><div class="point-item">2. 已載明116年前完成T-REC歸屬確認，並保留契約審閱與調整節點。</div><div class="point-item">3. 若憑證歸屬廠商，該部分不列入本校減碳量，僅列能源教育與轉型成果。</div><div class="point-item">4. 已加入避免重複計算（double counting）原則與年度佐證文件清單</div></div></td>
-        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁</li></ul></td>
+        <td>
+          <p class="diff diff-red"><strong>【建議修改】</strong>三、太陽能權屬與再生能源憑證未釐清</p>
+          <div class="diff diff-blue"><strong>【修正內容】</strong><div class="point-lines"><div class="point-item">1. 已新增綠電管理專章，說明契約型態、權責與管理方式。</div><div class="point-item">2. 已載明116年前完成再生能源憑證（T-REC）歸屬確認。</div><div class="point-item">3. 若憑證歸屬廠商，該部分不列入校園減碳量，僅列能源教育成果。</div><div class="point-item">4. 已建立年度發電量及自用比例統計機制</div></div></div>
+        </td>
+        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁。</li></ul></td>
       </tr>
       <tr>
         <td><ul class="cell-list"><li>四、土壤黃碳量測方法學不足</li></ul></td>
-        <td><div class="point-lines"><div class="point-item">1. 已補列量測SOP：採樣深度0–30cm、每區至少3點混樣、檢測SOC(%)。</div><div class="point-item">2. 已說明換算原則（參考IPCC土壤碳儲量方法）及必要參數，並揭露估算限制。</div><div class="point-item">3. 已規劃115年建置基線、117年辦理複測，建立同點位可追蹤機制。</div><div class="point-item">4. 已新增QA/QC流程（採樣紀錄、樣本編碼、送驗紀錄）以提高資料可信度。</div><div class="point-item">5. 已註明本項僅供研究與校務管理，不作碳權或抵銷用途</div></div></td>
-        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁</li></ul></td>
+        <td>
+          <p class="diff diff-red"><strong>【建議修改】</strong>四、土壤黃碳量測方法學不足</p>
+          <div class="diff diff-blue"><strong>【修正內容】</strong><div class="point-lines"><div class="point-item">1. 已新增量測方法：採樣深度0–30cm、每區至少3點混樣、檢測項目SOC(%)。</div><div class="point-item">2. 已補充換算方式（參考IPCC土壤碳儲量原則）及參數說明。</div><div class="point-item">3. 已規劃115年建基線、117年複測。</div><div class="point-item">4. 已註明僅供校園碳匯研究與管理，不作碳抵銷使用</div></div></div>
+        </td>
+        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁。</li></ul></td>
       </tr>
       <tr>
         <td><ul class="cell-list"><li>五、樹木碳匯數據來源需說明</li></ul></td>
-        <td><div class="point-lines"><div class="point-item">1. 已補充資料來源為教育部校園樹木資訊平台與校內樹木調查清冊。</div><div class="point-item">2. 已揭露計算方法（DBH估算、生物量轉碳係數0.5、CO2換算係數44/12）及計算邏輯。</div><div class="point-item">3. 已改以年度淨增量作為管理指標，並說明修剪、病蟲害與災損等變動因子。</div><div class="point-item">4. 已明確註記樹木碳匯為吸存管理數據，不作排放抵銷宣告</div></div></td>
-        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁</li></ul></td>
+        <td>
+          <p class="diff diff-red"><strong>【建議修改】</strong>五、樹木碳匯數據來源需說明</p>
+          <div class="diff diff-blue"><strong>【修正內容】</strong><div class="point-lines"><div class="point-item">1. 已補充資料來源（教育部校園樹木資訊平台及校內調查資料）。</div><div class="point-item">2. 已補列計算依據與公式（DBH估算、生物量轉碳量係數0.5、CO₂轉換係數44/12）。</div><div class="point-item">3. 已明確標示碳匯數據僅作吸存管理，不作排放抵銷認列</div></div></div>
+        </td>
+        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁。</li></ul></td>
       </tr>
       <tr>
         <td><ul class="cell-list"><li>六、EMS節能效益缺乏量化估算</li></ul></td>
-        <td><div class="point-lines"><div class="point-item">1. 已新增EMS節能效益試算，包含節電率對應減碳量與電費節省估算。</div><div class="point-item">2. 已建立節能KPI（年用電量、尖峰需量、空調運轉時數）與月追蹤季檢討制度。</div><div class="point-item">3. 已納入班級EUI資訊揭露與回饋機制，提升行為節能可視化管理。</div><div class="point-item">4. 已補充量測與驗證（M&amp;V）原則，說明天候與使用時數變動之校正方式</div></div></td>
-        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁</li></ul></td>
+        <td>
+          <p class="diff diff-red"><strong>【建議修改】</strong>六、EMS節能效益缺乏量化估算</p>
+          <div class="diff diff-blue"><strong>【修正內容】</strong><div class="point-lines"><div class="point-item">1. 已新增EMS節能效益試算（含年節電率對應減碳量與電費節省估算）。</div><div class="point-item">2. 已建立年度節電KPI（用電量、尖峰需量、空調運轉時數等）與檢核機制。</div><div class="point-item">3. 已納入班級EUI揭露與回饋機制</div></div></div>
+        </td>
+        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁。</li></ul></td>
       </tr>
       <tr>
         <td><ul class="cell-list"><li>七、課程與環境教育連結不足</li></ul></td>
-        <td><div class="point-lines"><div class="point-item">1. 已新增課程對應表，將黃碳採樣、樹木量測與太陽能分析對應至相關課綱。</div><div class="point-item">2. 已建立學習成效指標（前後測、作品產出、參與率）與年度成果發表機制。</div><div class="point-item">3. 已規劃教師共備與跨處室協作流程，確保活動型方案轉為常態課程。</div><div class="point-item">4. 已將成果納入校務會議定期檢視與滾動修正</div></div></td>
-        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁</li></ul></td>
+        <td>
+          <p class="diff diff-red"><strong>【建議修改】</strong>七、課程與環境教育連結不足</p>
+          <div class="diff diff-blue"><strong>【修正內容】</strong><div class="point-lines"><div class="point-item">1. 已新增「課程對應表」，明確連結課綱與淨零活動。</div><div class="point-item">2. 已補充對應案例（黃碳採樣、樹木量測、太陽能分析等）。</div><div class="point-item">3. 已建立年度數據發表與教學回饋機制</div></div></div>
+        </td>
+        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁。</li></ul></td>
       </tr>
       <tr>
         <td><ul class="cell-list"><li>八、未進行風險評估</li></ul></td>
-        <td><div class="point-lines"><div class="point-item">1. 已新增風險管理章節，建立風險辨識、分級與追蹤機制。</div><div class="point-item">2. 已建立風險矩陣（發生機率×衝擊程度）與觸發門檻，達門檻即啟動應變。</div><div class="point-item">3. 已補列主要風險及對策：綠電契約變動、經費不足、EMS整合延遲、黃碳未達預期。</div><div class="point-item">4. 已規劃分階段執行與預算重排機制，降低計畫落差與執行中斷風險</div></div></td>
-        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁</li></ul></td>
+        <td>
+          <p class="diff diff-red"><strong>【建議修改】</strong>八、未進行風險評估</p>
+          <div class="diff diff-blue"><strong>【修正內容】</strong><div class="point-lines"><div class="point-item">1. 已新增風險管理章節，建立辨識、分級、追蹤機制。</div><div class="point-item">2. 已列主要風險與因應（綠電契約變動、經費不足、EMS整合延遲、黃碳未達預期）。</div><div class="point-item">3. 已補充分階段推動與里程碑檢核作法</div></div></div>
+        </td>
+        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁。</li></ul></td>
       </tr>
       <tr>
         <td><ul class="cell-list"><li>總體修正說明</li></ul></td>
-        <td><div class="point-lines"><div class="point-item">1. 已完成基準年、分年目標、KPI與查核節點之整合。</div><div class="point-item">2. 已補強方法學、數據來源、換算依據與文件佐證鏈。</div><div class="point-item">3. 已釐清綠電權屬、T-REC歸屬與碳認列邊界，避免重複宣告。</div><div class="point-item">4. 已由活動導向調整為治理導向，導入PDCA滾動檢討機制。</div><div class="point-item">5. 將持續依教育局淨零政策指引，逐年精進並定期回報執行成效</div></div></td>
-        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁</li></ul></td>
+        <td>
+          <p class="diff diff-red"><strong>【建議修改】</strong>總體修正說明</p>
+          <div class="diff diff-blue"><strong>【修正內容】</strong><div class="point-lines"><div class="point-item">1. 已建立基準年、量化KPI及分年減量路徑。</div><div class="point-item">2. 已補強方法學、數據來源與換算依據。</div><div class="point-item">3. 已釐清綠電權屬與碳認列原則。</div><div class="point-item">4. 計畫架構已由活動導向調整為治理導向，納入滾動檢討機制</div></div></div>
+        </td>
+        <td><ul class="cell-list"><li>第＿＿＿頁至第＿＿＿頁。</li></ul></td>
       </tr>
           </tbody>
         </table>

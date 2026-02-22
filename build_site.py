@@ -3,13 +3,15 @@ from __future__ import annotations
 
 import csv
 import html
+import re
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent
 INPUT_FILE = ROOT / "review_responses.tsv"
 OUTPUT_DIR = ROOT / "docs"
-OUTPUT_FILE = OUTPUT_DIR / "index.html"
+OUTPUT_FILE_DOCS = OUTPUT_DIR / "index.html"
+OUTPUT_FILE_ROOT = ROOT / "index.html"
 
 
 def parse_rows(path: Path) -> list[tuple[str, str]]:
@@ -37,18 +39,48 @@ def linebreak_to_html(text: str) -> str:
     return escaped.replace("\n", "<br>")
 
 
-def build_html(rows: list[tuple[str, str]]) -> str:
+def split_response_and_page(response: str) -> tuple[str, str]:
+    marker = "頁碼："
+    if marker not in response:
+        return response.strip(), "第＿＿＿頁至第＿＿＿頁"
+    body, page = response.split(marker, 1)
+    return body.strip().rstrip("。"), page.strip()
+
+
+def split_numbered_points(text: str) -> list[str]:
+    parts = re.split(r"(?:(?<=^)|(?<=。))\s*(?=\d+\.\s*)", text)
+    points: list[str] = []
+    for p in parts:
+        p = p.strip().lstrip("。").strip()
+        if not p:
+            continue
+        points.append(p)
+    return points if points else [text.strip()]
+
+
+def render_points_html(text: str) -> str:
+    items = split_numbered_points(text)
+    rows = []
+    for item in items:
+        rows.append(f"<div class=\"point-item\">{linebreak_to_html(item)}</div>")
+    return "".join(rows)
+
+
+def build_html(rows: list[tuple[str, str]], canonical_url: str) -> str:
     table_rows = []
     for opinion, response in rows:
+        response_body, page_text = split_response_and_page(response)
         opinion_html = linebreak_to_html(opinion)
-        response_html = linebreak_to_html(response)
+        response_points_html = render_points_html(response_body)
+        page_html = linebreak_to_html(page_text)
         table_rows.append(
             "      <tr>\n"
-            f"        <td>{opinion_html}</td>\n"
+            f"        <td><ul class=\"cell-list\"><li>{opinion_html}</li></ul></td>\n"
             "        <td>\n"
             f"          <p class=\"diff diff-red\"><strong>【建議修改】</strong>{opinion_html}</p>\n"
-            f"          <p class=\"diff diff-blue\"><strong>【修正內容】</strong>{response_html}</p>\n"
+            f"          <div class=\"diff diff-blue\"><strong>【修正內容】</strong><div class=\"point-lines\">{response_points_html}</div></div>\n"
             "        </td>\n"
+            f"        <td><ul class=\"cell-list\"><li>{page_html}</li></ul></td>\n"
             "      </tr>"
         )
 
@@ -57,6 +89,12 @@ def build_html(rows: list[tuple[str, str]]) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="index,follow,max-image-preview:none">
+  <meta name="description" content="114年度碳中和中程計畫審查意見修正對照表，提供教育局報送使用。">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="{html.escape(canonical_url)}">
   <title>114年度碳中和中程計畫 審查意見修正對照表</title>
   <style>
     :root {{
@@ -114,7 +152,7 @@ def build_html(rows: list[tuple[str, str]]) -> str:
     table {{
       width: 100%;
       border-collapse: collapse;
-      min-width: 860px;
+      min-width: 980px;
     }}
     th, td {{
       vertical-align: top;
@@ -132,9 +170,26 @@ def build_html(rows: list[tuple[str, str]]) -> str:
       z-index: 1;
     }}
     td:first-child {{
-      width: 33%;
+      width: 26%;
       background: #f8fcf7;
       font-weight: 700;
+    }}
+    td:nth-child(2) {{
+      width: 56%;
+    }}
+    td:nth-child(3) {{
+      width: 18%;
+      white-space: nowrap;
+    }}
+    .cell-list {{
+      margin: 0;
+      padding-left: 1.1rem;
+    }}
+    .cell-list li {{
+      margin: 0 0 .3rem 0;
+    }}
+    .cell-list li:last-child {{
+      margin-bottom: 0;
     }}
     .footer {{
       margin-top: 14px;
@@ -146,6 +201,15 @@ def build_html(rows: list[tuple[str, str]]) -> str:
     }}
     .diff + .diff {{
       margin-top: 8px;
+    }}
+    .point-lines {{
+      margin-top: .3rem;
+    }}
+    .point-item {{
+      margin: 0;
+    }}
+    .point-item + .point-item {{
+      margin-top: .4rem;
     }}
     .diff-red {{
       color: #b42318;
@@ -164,7 +228,7 @@ def build_html(rows: list[tuple[str, str]]) -> str:
   <main class="wrap">
     <section class="hero">
       <h1>114年度「碳中和中程計畫」審查意見修正對照表</h1>
-      <p>雙欄格式：審查意見 / 修正情形與頁碼（可直接列印或作為附件）</p>
+      <p>三欄格式：審查意見 / 修正情形（紅藍對比）/ 頁碼（可直接列印或作為附件）</p>
     </section>
     <section class="card">
       <div class="scroll">
@@ -172,7 +236,8 @@ def build_html(rows: list[tuple[str, str]]) -> str:
           <thead>
             <tr>
               <th>審查意見</th>
-              <th>修正情形與頁碼</th>
+              <th>修正情形（紅藍對比）</th>
+              <th>頁碼</th>
             </tr>
           </thead>
           <tbody>
@@ -193,8 +258,12 @@ def main() -> None:
     if not rows:
         raise SystemExit("No rows found in review_responses.tsv")
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    OUTPUT_FILE.write_text(build_html(rows), encoding="utf-8")
-    print(f"Generated: {OUTPUT_FILE}")
+    html_root = build_html(rows, "https://haoahao.github.io/Carbon_Neutral/")
+    html_docs = build_html(rows, "https://haoahao.github.io/Carbon_Neutral/docs/")
+    OUTPUT_FILE_ROOT.write_text(html_root, encoding="utf-8")
+    OUTPUT_FILE_DOCS.write_text(html_docs, encoding="utf-8")
+    print(f"Generated: {OUTPUT_FILE_ROOT}")
+    print(f"Generated: {OUTPUT_FILE_DOCS}")
 
 
 if __name__ == "__main__":
