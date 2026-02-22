@@ -71,13 +71,21 @@ def list_html(text: str) -> str:
     return f'<ul class="cell-list">{rendered}</ul>'
 
 
+def points_html(text: str) -> str:
+    items = to_bullets(text)
+    rendered = "".join(
+        f'<div class="point-item">{linebreak_to_html(item)}</div>' for item in items
+    )
+    return f'<div class="point-lines">{rendered}</div>'
+
+
 def build_html(rows: list[tuple[str, str, str]]) -> str:
     table_rows = []
     for opinion, response, page in rows:
         table_rows.append(
             "      <tr>\n"
             f"        <td>{list_html(opinion)}</td>\n"
-            f"        <td>{list_html(response)}</td>\n"
+            f"        <td>{points_html(response)}</td>\n"
             f"        <td>{list_html(page)}</td>\n"
             "      </tr>"
         )
@@ -188,6 +196,15 @@ def build_html(rows: list[tuple[str, str, str]]) -> str:
     }}
     .cell-list li:last-child {{
       margin-bottom: 0;
+    }}
+    .point-lines {{
+      margin: 0;
+    }}
+    .point-item {{
+      margin: 0;
+    }}
+    .point-item + .point-item {{
+      margin-top: .5rem;
     }}
     .footer {{
       margin-top: 14px;
