@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import csv
 import html
+import re
 from pathlib import Path
 
 
@@ -51,14 +52,33 @@ def linebreak_to_html(text: str) -> str:
     return escaped.replace("\n", "<br>")
 
 
+def to_bullets(text: str) -> list[str]:
+    text = text.strip()
+    if not text:
+        return []
+    numbered = re.findall(r"((?<!\d)\d+\.\s+.*?)(?=(?:(?<!\d)\d+\.\s+)|$)", text)
+    if numbered:
+        return [item.strip() for item in numbered if item.strip()]
+    lines = [seg.strip() for seg in text.split("\n") if seg.strip()]
+    if len(lines) > 1:
+        return lines
+    return [text]
+
+
+def list_html(text: str) -> str:
+    items = to_bullets(text)
+    rendered = "".join(f"<li>{linebreak_to_html(item)}</li>" for item in items)
+    return f'<ul class="cell-list">{rendered}</ul>'
+
+
 def build_html(rows: list[tuple[str, str, str]]) -> str:
     table_rows = []
     for opinion, response, page in rows:
         table_rows.append(
             "      <tr>\n"
-            f"        <td>{linebreak_to_html(opinion)}</td>\n"
-            f"        <td>{linebreak_to_html(response)}</td>\n"
-            f"        <td>{linebreak_to_html(page)}</td>\n"
+            f"        <td>{list_html(opinion)}</td>\n"
+            f"        <td>{list_html(response)}</td>\n"
+            f"        <td>{list_html(page)}</td>\n"
             "      </tr>"
         )
 
@@ -158,6 +178,16 @@ def build_html(rows: list[tuple[str, str, str]]) -> str:
     td:nth-child(3) {{
       width: 18%;
       white-space: nowrap;
+    }}
+    .cell-list {{
+      margin: 0;
+      padding-left: 1.1rem;
+    }}
+    .cell-list li {{
+      margin: 0 0 .3rem 0;
+    }}
+    .cell-list li:last-child {{
+      margin-bottom: 0;
     }}
     .footer {{
       margin-top: 14px;
